@@ -1,0 +1,169 @@
+---
+title: "Clustering and Bayesian ML models"
+author: "M. O'Neill"
+date: "Spring 2025"
+output: 
+  beamer_presentation:
+    theme: "Montpellier"
+    colortheme: "beaver"
+    fonttheme: "structurebold"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## K-Nearest Neighbors
+
+KNN is among the simplest ML algorithms; it makes predictions based on similarities between observations
+
+Unlike Decision Tree and Random Forest models, KNN is based on *unsupervised* learning:
+
+the algorithm learns the patterns in the data *without* target variables
+
+Pros:  simple, easy-to-program
+
+Cons:  lazy, can be inefficient
+
+## K-Nearest Neighbors
+
+The "k" in KNN refers to the *k* observations that are similar or nearest to the observation we want to predict
+
+We can parameterize our models by defining *k* (the number of neighbors we want to use) and *distance* (typically Euclidean or Manhattan, and less commonly Minkowski, which generalizes the other two) to these observations in the plane space
+
+Can think of these as mathematical distance, providing a measure of dissimilarity
+
+## K-Nearest Neighbors
+
+The Euclidean distance between two points is:
+
+$$
+d_{\text{Euclidean}}(\mathbf{p}, \mathbf{q}) = \sqrt{\sum_{i=1}^{n} (p_i - q_i)^2}
+$$
+
+
+The Manhattan distance between two points is:
+
+$$
+d_{\text{Manhattan}}(\mathbf{p}, \mathbf{q}) = \sum_{i=1}^{n} |p_i - q_i|
+$$
+
+## K-Nearest Neighbors
+
+Worth noting: most distance measures are scale-sensitive (features with different scales, e.g., square footage and year built) and this can lead to biased results
+
+To address this, we need to **pre-process** our data before feeding it to the algorithm
+
+Compute the z-score for each variable of interest, and use these standardized values instead of the original data
+
+- example KNN script
+
+
+## K-Nearest Neighbors
+
+Our model's going to be sensitive to the choice of *k*
+
+When *k* > 1, it will make predictions based on the average (in a regression context) or most common class (in a classification context) of its neighbors
+
+We'll want to set *k* according to the data (note it's best to use an odd number for *k* to avoid ties in "most common" class)
+
+One option: guess and check
+
+- example KNN script
+
+
+## K-means Clustering
+
+Clustering algorithms like *K*-means are useful for reducing the dimensionality of our observation space
+
+*K*-means tries to classify observations into mutually exclusive groups ( = clusters), seeking groups that:
+
+- maximize similarities within the same cluster
+- minimize similarities between clusters
+
+## K-means Clustering
+
+Specifically, the algorithm is based on the within-cluster sum of squares statistic:
+
+$$
+\text{WSS} = \sum_{k=1}^{K} \sum_{i \in C_k} \| \mathbf{x}_i - \boldsymbol{\mu}_k \|^2
+$$
+
+Where:
+
+- \( K \) is the number of clusters
+- \( C_k \) is the set of observations assigned to cluster \( k \)
+- \( \mathbf{x}_i \) is the \( i \)-th observation in cluster \( k \)
+- \( \boldsymbol{\mu}_k \) is the centroid (mean vector) of cluster \( k \)
+- \( \| \cdot \|^2 \) denotes the squared Euclidean distance
+
+
+## K-means Clustering
+
+The resulting groups can be represented by their centroids - the center points that summarize their mean values
+
+Like *KNN*, dissimilarity is measured through distance (e.g., Manhattan or Euclidean)
+
+But unlike *KNN*, *K*-means doesn't require predicting an average response value/class of the nearest neighbors...the point is just to assign observations to a cluster
+
+## Bayesian learning
+
+Naive Bayes is a machine learning algorithm whose job is to predict a target variable Y given the features X1, X2,...,XN
+
+This classifier is great at answering questions like "what is the probability that this email is spam?"
+
+## Bayesian learning
+
+*40% of all emails are spam.  10% of spam emails contain the word "viagra", while only 0.5% of nonspam emails contain the word "viagra".  We would like to know P(A|B), the probability that an email is spam given that it contains "viagra".  An application of Bayes Theorem gives the answer.*
+
+## Bayesian learning
+
+Recall Bayes' Theorem:
+
+$$
+P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}
+$$
+
+In the context of our spam problem:
+
+- P(B|A) = 0.1
+- P(A) = 0.4
+- P(B) = 0.1 * 0.4 + 0.005 * 0.6
+- gives us 0.93
+
+## Naive Bayes
+
+In this problem, we're only dealing with one feature word ("viagra"), but what if we wanted to classify emails as spam/not spam more generally (i.e., not relying on a single word)?  P(B) is now represented as X1,...,XN
+
+$$
+P(Y \mid X_1,...,X_N) = \frac{P(X_1,...,X_N \mid Y) \cdot P(Y)}{P(X_1,...,X_N)}
+$$
+
+The trouble starts with the huge number of parameters (X) and the size of the training dataset needed (also huge!) to derive probabilities from it
+
+## Naive Bayes
+
+The Naive Bayes algorithm addresses this problem by assuming "conditional independence" among features (roughly equivalent to assuming there is no multicollinearity among explanatory or independent variables)
+
+Doing so dramatically simplifies the complexity of the problem space and allows us to estimate the posterior using the Naive Bayes classification rule
+
+## Naive Bayes
+
+The Naive Bayes classifier assigns a class label $\hat{y}$ to a feature vector $\mathbf{x} = (x_1, x_2, \dots, x_n)$ using the following rule:
+
+$$
+\hat{y} = \underset{y \in \mathcal{Y}}{\arg\max} \; P(y) \prod_{i=1}^{n} P(x_i \mid y)
+$$
+
+Where:
+
+- $\hat{y}$ is the predicted class (e.g., spam or ham)
+- $\mathcal{Y}$ is the set of possible classes
+- $P(y)$ is the prior probability of class $y$
+- $P(x_i \mid y)$ is the likelihood of feature $x_i$ given class $y$
+- The assumption is that features $x_1, x_2, \dots, x_n$ are conditionally independent given the class $y$
+
+## Naive Bayes
+
+- example Naive Bayes script
+

@@ -1,0 +1,101 @@
+---
+title: "Poisson and hypergeometric distributions"
+author: "***"
+date: "Spring 2025"
+output: 
+  beamer_presentation:
+    theme: "Montpellier"
+    colortheme: "beaver"
+    fonttheme: "structurebold"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Discrete probability distributions
+
+We're going to add to the set of discrete probability distributions we know.
+
+Recall that binomial processes arise when:
+- we're working with a number of *n* independent trials
+- each trial results in one of two possible outcomes, success or failure
+- probability *p* of each outcome is known and constant
+- random variable of interest (*x*) is the number of successes
+
+## Binomial process review - example 1
+
+A transportation planner is asked to estimate the number of accidents that will occur during the next month at a particular intersection.
+
+Over the last 60 days, there were 3 accidents on 3 separate days.  How could you estimate the number of accidents we would expect over the course of the next month?
+
+## Binomial process review - example 1 cont'd
+
+What's the probability of observing more than 3 accidents in the next month?
+
+We could try to use the binomial process, assigning n = 30, x = 0, 1, 2, 3, and p = 0.05 :
+
+$$
+1 - {(Pr(X=0)+Pr(X=1)+Pr(X=2)+Pr(X=3))}
+$$
+(See demo script for the calculations)
+
+## Binomial process review - example 1 cont'd
+
+But this approach ignores the possibility that there could be more than one accident in a single day.
+
+It also reveals how time units, like days, are arbitrary.
+
+What if we changed the time unit to half days?  This changes the inputs to n = 60, x = 0, 1, 2, 3, and p = 0.025 
+
+(See demo)
+
+## Binomial >> Poisson
+
+Can continue to divide the time into smaller and smaller units, which increases the sample size (n) and decreases the probabilities of success (p), changing Pr(X = x) 
+
+However, as n becomes very large, we transition from a discrete time to a continuous time problem
+
+And move from a binomial to a Poisson distribution
+
+## Poisson distribution
+
+For a continuous time scenario, the probability of *x* events during a period of time is equal to:
+
+$$
+P(X = x) = \frac{e^{-\lambda} \lambda^x}{x!}
+$$
+where *lambda* is the mean number of events we expect during a time period, and *e* is a constant, always equal to 2.718
+
+## Poisson distribution - examples 1 and 2
+
+[1] What's the probability of observing more than 3 accidents in the next month?
+
+[2] Suppose that traffic accidents occur once every ten days.  Find the probability that there are 3 accidents during the next 25-day period.
+
+- start by finding lambda (expected number of events during the time period of interest)
+- plug lambda and x into formula
+
+## Poisson distribution - example 3
+
+Suppose that we are interested in the frequency of flooding along a creek that runs through a residential area.  It would be useful to know how likely floods were, whether we were puchasing a house in the area, setting flood insurance premiums, or designing a flood control project.
+Floods can of course be of different magnitudes.  The magnitude of an *n*-year flood is such that it is exceeded with probability 1/*n* in any given year.  Thus, the probability of a 50-year flood in any given year is 1/50.  A 100-year flood is larger, and occurs less frequently; a 100-year flood occurs in any given year with a probability 1/100.  According to the US Army Corps of engineers, hurricane Katrina, which hit the US Gulf Coast in 2005, was a 396-year storm, meaning that a storm of that intensity could be expected only once every 396 years.
+What is the probability that there will be exactly one 50-year flood during the next 50-year period?
+
+## Hypergeometric distribution
+
+Another discrete probability distribution is known as the **hypergeometric distribution**
+
+Describes the probability of *x* successes in *n* draws *without replacement* from a finite total population of size *N* and where there are *r* items that fall into the category of interest
+
+$$
+P(X = x) = \frac{\binom{r}{x} \binom{N-r}{n-x}}{\binom{N}{n}}
+$$
+
+## Hypergeometric distribution - example 1
+
+A box contains *N* = 5 balls; *r* = 3 are red, and *N-r* = 2 are blue.  A sample of *n* = 2 balls is drawn from the box without replacement.  Find the probability that exactly one of the balls is red.
+
+## Hypergeometric distribution - example 2
+
+What is the probability that a 5-card hand contains fewer than three Kings?
